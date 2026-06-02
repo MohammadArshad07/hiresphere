@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 import { toast } from "sonner";
+import { apiUrl } from "@/lib/api";
 
 
 export default function ATSCheckerPage() {
@@ -62,7 +63,7 @@ export default function ATSCheckerPage() {
 
 
       const response = await fetch(
-        "http://127.0.0.1:8000/auth/auth/analyze-resume",
+        apiUrl("/auth/analyze-resume"),
         {
 
           method: "POST",

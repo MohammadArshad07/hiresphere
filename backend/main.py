@@ -15,6 +15,7 @@ from app.models.application import Application
 from app.api.applications import router as applications_router
 
 from app.api import dashboard
+from app.core.config import CORS_ORIGINS
 
 app = FastAPI(
     title="HireSphere API",
@@ -31,7 +32,7 @@ Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

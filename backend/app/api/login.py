@@ -7,12 +7,12 @@ from app.db.database import SessionLocal
 from app.models.user import User
 from app.schemas.user import LoginSchema
 from app.core.security import verify_password
+from app.core.config import (
+    JWT_SECRET_KEY,
+    JWT_ALGORITHM
+)
 
 router = APIRouter()
-
-SECRET_KEY = "sJTLPeefVBZs4YL8s8Q8thrufdK9cDaA6a9YAJJYUfw="
-ALGORITHM = "HS256"
-
 
 # Database Dependency
 
@@ -68,8 +68,8 @@ def login(
 
     token = jwt.encode(
         payload,
-        SECRET_KEY,
-        algorithm=ALGORITHM
+        JWT_SECRET_KEY,
+        algorithm=JWT_ALGORITHM
     )
 
     return {

@@ -16,7 +16,6 @@ from sqlalchemy.orm import Session
 
 from app.schemas.user import (
     UserCreate,
-    UserLogin
 )
 
 from app.models.user import User
@@ -24,8 +23,7 @@ from app.models.user import User
 from app.db.database import SessionLocal
 
 from app.core.security import (
-    hash_password,
-    verify_password
+    hash_password
 )
 
 from app.core.dependencies import (
@@ -38,7 +36,6 @@ from app.services.cloudinary_service import (
 
 
 router = APIRouter(
-    prefix="/auth",
     tags=["Authentication"]
 )
 
@@ -118,74 +115,6 @@ def signup(
 
         "message":
             "User created successfully"
-    }
-
-
-
-# LOGIN
-
-@router.post("/login")
-
-def login(user: UserLogin):
-
-    db: Session = SessionLocal()
-
-
-    existing_user = db.query(User).filter(
-        User.email == user.email
-    ).first()
-
-
-    # USER NOT FOUND
-
-    if not existing_user:
-
-        raise HTTPException(
-
-            status_code=401,
-
-            detail="User not found. Please signup first."
-        )
-
-
-    # PASSWORD CHECK
-
-    valid_password = verify_password(
-
-        user.password,
-
-        existing_user.password
-    )
-
-
-    if not valid_password:
-
-        raise HTTPException(
-
-            status_code=401,
-
-            detail="Invalid password"
-        )
-
-
-    # SUCCESS RESPONSE
-
-    return {
-
-        "message": "Login successful",
-
-        "access_token": "dummy-token",
-
-        "user": {
-
-            "id": existing_user.id,
-
-            "name": existing_user.name,
-
-            "email": existing_user.email,
-
-            "role": existing_user.role
-        }
     }
 
 

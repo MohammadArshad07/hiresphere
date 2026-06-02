@@ -16,6 +16,7 @@ import {
 } from "next-auth/react";
 
 import { toast } from "sonner";
+import { apiUrl } from "@/lib/api";
 
 
 export default function LoginPage() {
@@ -93,8 +94,7 @@ export default function LoginPage() {
 
 
       const response = await fetch(
-
-        "http://127.0.0.1:8000/auth/login",
+        apiUrl("/auth/login"),
 
         {
 

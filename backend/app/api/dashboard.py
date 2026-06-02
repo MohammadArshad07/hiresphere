@@ -1,4 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException
+)
 
 from sqlalchemy.orm import Session
 
@@ -7,6 +11,7 @@ from app.db.database import SessionLocal
 from app.models.job import Job
 from app.models.application import Application
 from app.models.user import User
+from app.core.dependencies import get_current_user
 
 
 router = APIRouter()
@@ -34,13 +39,20 @@ def get_db():
 @router.get("/seeker")
 
 def seeker_dashboard(
-
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 
 ):
+    if current_user.role != "jobseeker":
+        raise HTTPException(
+            status_code=403,
+            detail="Only job seekers can access this dashboard"
+        )
 
     applications = db.query(
         Application
+    ).filter(
+        Application.user_id == current_user.id
     ).all()
 
 
@@ -87,15 +99,19 @@ def seeker_dashboard(
 @router.get("/recruiter")
 
 def recruiter_dashboard(
-
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 
 ):
+    if current_user.role != "recruiter":
+        raise HTTPException(
+            status_code=403,
+            detail="Only recruiters can access this dashboard"
+        )
 
-    # TEMPORARY:
-    # FETCH ALL JOBS
-
-    jobs = db.query(Job).all()
+    jobs = db.query(Job).filter(
+        Job.recruiter_id == current_user.id
+    ).all()
 
 
     job_ids = [

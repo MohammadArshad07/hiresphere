@@ -3,12 +3,16 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { toast } from "sonner";
+import { apiUrl } from "@/lib/api";
 interface Application {
-  id: number;
-  user_id: number;
-  job_id: number;
+  application_id: number;
+  applicant_name: string;
+  applicant_email: string;
+  job_title: string;
+  company: string;
   status: string;
-  created_at: string;
+  applied_at: string;
 }
 
 export default function RecruiterApplicationsPage() {
@@ -25,12 +29,35 @@ export default function RecruiterApplicationsPage() {
   const fetchApplications = async () => {
 
     try {
+      const token =
+        localStorage.getItem("token");
+
+      if (!token) {
+        toast.error(
+          "Please login first"
+        );
+        return;
+      }
 
       const response = await fetch(
-        "http://127.0.0.1:8000/applications/all"
+        apiUrl("/applications/all"),
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
       );
 
       const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(
+          data.detail ||
+            "Failed to load applications"
+        );
+        return;
+      }
 
       setApplications(data);
 
@@ -146,11 +173,14 @@ export default function RecruiterApplicationsPage() {
             <div className="mb-5">
 
               <h2 className="text-2xl font-bold">
-                Application #{application.id}
+                Application #{application.application_id}
               </h2>
 
               <p className="text-cyan-300 mt-2">
-                User ID: {application.user_id}
+                {application.applicant_name}
+              </p>
+              <p className="text-slate-400 mt-1 text-sm">
+                {application.applicant_email}
               </p>
 
             </div>
@@ -160,7 +190,10 @@ export default function RecruiterApplicationsPage() {
             <div className="space-y-3 mb-6">
 
               <p className="text-slate-300">
-                📌 Job ID: {application.job_id}
+                📌 {application.job_title}
+              </p>
+              <p className="text-slate-400">
+                🏢 {application.company}
               </p>
 
               <p className="text-green-400 font-semibold">
@@ -176,7 +209,7 @@ export default function RecruiterApplicationsPage() {
             </p>
 
             <p className="text-slate-200">
-              {new Date(application.created_at).toLocaleString()}
+              {new Date(application.applied_at).toLocaleString()}
             </p>
 
 

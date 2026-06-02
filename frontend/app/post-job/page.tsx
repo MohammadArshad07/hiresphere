@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { apiUrl } from "@/lib/api";
 
 
 export default function PostJobPage() {
@@ -66,9 +67,16 @@ export default function PostJobPage() {
       const token =
         localStorage.getItem("token");
 
+      if (!token) {
+        toast.error(
+          "Please login first"
+        );
+        return;
+      }
+
 
       const response = await fetch(
-        "http://127.0.0.1:8000/jobs/create",
+        apiUrl("/jobs/create"),
         {
 
           method: "POST",

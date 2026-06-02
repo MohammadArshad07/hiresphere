@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 
 const handler = NextAuth({
+  trustHost: true,
 
   providers: [
 
@@ -99,12 +100,19 @@ const handler = NextAuth({
 
 
     async redirect({
-
+      url,
       baseUrl
-
     }) {
+      // Keep redirects on the current app origin in production/proxy deployments.
+      if (url.startsWith("/")) {
+        return url;
+      }
 
-      return `${baseUrl}/dashboard/seeker`;
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+
+      return "/dashboard/seeker";
     },
 
   },

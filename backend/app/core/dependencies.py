@@ -12,10 +12,10 @@ from sqlalchemy.orm import Session
 
 from app.db.database import SessionLocal
 from app.models.user import User
-
-
-SECRET_KEY = "hiresphere_secret_key"
-ALGORITHM = "HS256"
+from app.core.config import (
+    JWT_SECRET_KEY,
+    JWT_ALGORITHM
+)
 
 
 oauth2_scheme = OAuth2PasswordBearer(
@@ -52,8 +52,8 @@ def get_current_user(
 
         payload = jwt.decode(
             token,
-            SECRET_KEY,
-            algorithms=[ALGORITHM]
+            JWT_SECRET_KEY,
+            algorithms=[JWT_ALGORITHM]
         )
 
         user_id = payload.get("user_id")

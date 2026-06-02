@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { toast } from "sonner";
+import { apiUrl } from "@/lib/api";
 
 
 interface Job {
@@ -38,7 +39,7 @@ export default function JobsPage() {
     try {
 
       const response = await fetch(
-        "http://127.0.0.1:8000/jobs/all"
+        apiUrl("/jobs/all")
       );
 
 
@@ -84,7 +85,7 @@ export default function JobsPage() {
 
 
       const response = await fetch(
-        `http://127.0.0.1:8000/applications/apply/${jobId}`,
+        apiUrl(`/applications/apply/${jobId}`),
         {
 
           method: "POST",

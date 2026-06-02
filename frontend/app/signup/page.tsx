@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
+import { apiUrl } from "@/lib/api";
 
 
 export default function SignupPage() {
@@ -46,7 +47,7 @@ export default function SignupPage() {
 
 
       const response = await fetch(
-        "http://127.0.0.1:8000/auth/auth/signup",
+        apiUrl("/auth/signup"),
         {
 
           method: "POST",

@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 import { toast } from "sonner";
+import { apiUrl } from "@/lib/api";
 
 
 export default function SeekerDashboardPage() {
@@ -100,7 +101,7 @@ export default function SeekerDashboardPage() {
 
 
         const response = await fetch(
-          "http://127.0.0.1:8000/dashboard/seeker",
+          apiUrl("/dashboard/seeker"),
           {
 
             headers: {
@@ -196,7 +197,7 @@ export default function SeekerDashboardPage() {
 
 
         const response = await fetch(
-          "http://127.0.0.1:8000/auth/upload-resume",
+          apiUrl("/auth/upload-resume"),
           {
 
             method: "POST",

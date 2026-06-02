@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 import { toast } from "sonner";
+import { apiUrl } from "@/lib/api";
 
 
 export default function RecruiterDashboardPage() {
@@ -47,8 +48,21 @@ export default function RecruiterDashboardPage() {
 
     try {
 
+      const token =
+        localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
       const response = await fetch(
-        "http://127.0.0.1:8000/dashboard/recruiter"
+        apiUrl("/dashboard/recruiter"),
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
       );
 
 
@@ -149,13 +163,28 @@ export default function RecruiterDashboardPage() {
         setLoading(true);
 
 
-        const response = await fetch(
+        const token =
+          localStorage.getItem("token");
 
-          `http://127.0.0.1:8000/applications/update-status/${applicationId}?status=${status}`,
+        if (!token) {
+          toast.error(
+            "Please login first"
+          );
+          return;
+        }
+
+        const response = await fetch(
+          apiUrl(
+            `/applications/update-status/${applicationId}?status=${encodeURIComponent(status)}`
+          ),
 
           {
 
             method: "PATCH",
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+            },
 
           }
         );

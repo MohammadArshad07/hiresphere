@@ -42,9 +42,14 @@ def get_db():
 def create_job(
 
     job: JobCreate,
-
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    if current_user.role != "recruiter":
+        raise HTTPException(
+            status_code=403,
+            detail="Only recruiters can create jobs"
+        )
 
     new_job = Job(
 
@@ -55,7 +60,7 @@ def create_job(
         description=job.description,
         requirements=job.requirements,
 
-        recruiter_id=1
+        recruiter_id=current_user.id
     )
 
     db.add(new_job)
