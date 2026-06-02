@@ -10,7 +10,7 @@ from app.core.security import verify_password
 
 router = APIRouter()
 
-SECRET_KEY = "hiresphere_secret_key"
+SECRET_KEY = "sJTLPeefVBZs4YL8s8Q8thrufdK9cDaA6a9YAJJYUfw="
 ALGORITHM = "HS256"
 
 
