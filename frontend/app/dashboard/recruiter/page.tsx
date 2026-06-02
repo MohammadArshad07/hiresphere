@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 
 import ProtectedRoute from "@/components/ProtectedRoute";
 
@@ -16,8 +16,7 @@ import { apiUrl } from "@/lib/api";
 
 export default function RecruiterDashboardPage() {
 
-  const { data: session } = useSession();
-
+  // const { data: session } = useSession();
 
   const [userName, setUserName] =
     useState("Recruiter");
@@ -102,15 +101,10 @@ export default function RecruiterDashboardPage() {
 
   useEffect(() => {
 
-    // GOOGLE USER
-
-    if (session?.user?.name) {
-
-      setUserName(
-        session.user.name
-      );
-    }
-
+    // Google OAuth disabled
+    // if (session?.user?.name) {
+    //   setUserName(session.user.name);
+    // }
 
     // NORMAL LOGIN USER
 
@@ -146,7 +140,7 @@ export default function RecruiterDashboardPage() {
 
     fetchDashboard();
 
-  }, [session]);
+  }, []);
 
 
 

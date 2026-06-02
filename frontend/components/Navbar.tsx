@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import { signOut } from "next-auth/react";
+// import { signOut } from "next-auth/react";
 
 
 export default function Navbar() {
@@ -66,17 +66,10 @@ export default function Navbar() {
 
     setUser(null);
 
+    // Google OAuth disabled
+    // await signOut({ callbackUrl: "/", redirect: true });
 
-    // CLEAR GOOGLE SESSION
-
-    await signOut({
-
-      callbackUrl: "/",
-
-      redirect: true,
-
-    });
-
+    router.push("/");
   };
 
 

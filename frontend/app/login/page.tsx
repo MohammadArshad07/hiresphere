@@ -6,14 +6,11 @@ import Link from "next/link";
 
 import { motion } from "framer-motion";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import {
-  signIn,
-  useSession
-} from "next-auth/react";
+// import { signIn, useSession } from "next-auth/react";
 
 import { toast } from "sonner";
 import { apiUrl } from "@/lib/api";
@@ -23,9 +20,7 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const { data: session } =
-  useSession();
-
+  // const { data: session } = useSession();
 
   const [email, setEmail] =
     useState("");
@@ -39,45 +34,27 @@ export default function LoginPage() {
     useState(false);
 
 
-  const [googleLoading, setGoogleLoading] =
-    useState(false);
-
+  // const [googleLoading, setGoogleLoading] = useState(false);
 
   const [role, setRole] =
     useState("jobseeker");
 
-   useEffect(() => {
-
-  if (session?.user) {
-
-    localStorage.setItem(
-
-      "user",
-
-      JSON.stringify({
-
-        name: session.user.name,
-
-        email: session.user.email,
-
-        role:
-          (session.user as any).role ||
-          "jobseeker"
-
-      })
-    );
-
-    localStorage.setItem(
-      "isLoggedIn",
-      "true"
-    );
-
-    router.push(
-      "/dashboard/seeker"
-    );
-  }
-
-}, [session, router]);
+  /*
+  useEffect(() => {
+    if (session?.user) {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: session.user.name,
+          email: session.user.email,
+          role: (session.user as any).role || "jobseeker",
+        })
+      );
+      localStorage.setItem("isLoggedIn", "true");
+      router.push("/dashboard/seeker");
+    }
+  }, [session, router]);
+  */
 
   // LOGIN FUNCTION
 
@@ -209,44 +186,20 @@ localStorage.setItem(
   };
 
 
-
-  // GOOGLE LOGIN
-
-  const handleGoogleLogin =
-    async () => {
-
-      try {
-
-        setGoogleLoading(true);
-
-        toast.success(
-          "Redirecting to Google..."
-        );
-
-        await signIn("google", {
-
-          callbackUrl:
-            "/dashboard/seeker",
-
-        });
-
-      } catch (error) {
-
-        console.log(error);
-
-        toast.error(
-          "Google login failed"
-        );
-
-      } finally {
-
-        setGoogleLoading(false);
-
-      }
-
-    };
-
-
+  /*
+  const handleGoogleLogin = async () => {
+    try {
+      setGoogleLoading(true);
+      toast.success("Redirecting to Google...");
+      await signIn("google", { callbackUrl: "/dashboard/seeker" });
+    } catch (error) {
+      console.log(error);
+      toast.error("Google login failed");
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+  */
 
   return (
 
@@ -458,48 +411,10 @@ localStorage.setItem(
 
         </form>
 
-
-
-        {/* DIVIDER */}
-
-        <div className="flex items-center gap-4 my-8">
-
-          <div className="flex-1 h-px bg-white/10"></div>
-
-          <span className="text-slate-400 text-sm">
-
-            OR
-
-          </span>
-
-          <div className="flex-1 h-px bg-white/10"></div>
-
-        </div>
-
-
-
-        {/* GOOGLE LOGIN */}
-
-        <button
-          onClick={handleGoogleLogin}
-          disabled={googleLoading}
-          className="w-full bg-white hover:bg-slate-200 text-black transition py-4 rounded-2xl font-semibold text-lg flex items-center justify-center gap-3 disabled:opacity-50"
-        >
-
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="w-6 h-6"
-          />
-
-
-          {googleLoading
-            ? "Redirecting..."
-            : "Continue with Google"}
-
-        </button>
-
-
+        {/* Google OAuth disabled
+        <div className="flex items-center gap-4 my-8">...</div>
+        <button onClick={handleGoogleLogin}>Continue with Google</button>
+        */}
 
         {/* SIGNUP LINK */}
 
