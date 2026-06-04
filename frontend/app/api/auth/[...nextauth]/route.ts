@@ -1,31 +1,9 @@
-import { NextResponse } from "next/server";
-
-// Google OAuth / NextAuth is disabled for a simple email-password setup.
-// To re-enable, restore the commented block below and set GOOGLE_* / NEXTAUTH_* env vars.
-
-export async function GET() {
-  return NextResponse.json(
-    { error: "OAuth is disabled" },
-    { status: 404 }
-  );
-}
-
-export async function POST() {
-  return NextResponse.json(
-    { error: "OAuth is disabled" },
-    { status: 404 }
-  );
-}
-
-/*
 import NextAuth from "next-auth";
 
 import GoogleProvider from "next-auth/providers/google";
 
 
 const handler = NextAuth({
-  trustHost: true,
-
   providers: [
 
     GoogleProvider({
@@ -124,14 +102,14 @@ const handler = NextAuth({
       baseUrl
     }) {
       if (url.startsWith("/")) {
-        return url;
+        return `${baseUrl}${url}`;
       }
 
       if (url.startsWith(baseUrl)) {
         return url;
       }
 
-      return "/dashboard/seeker";
+      return `${baseUrl}/dashboard/seeker`;
     },
 
   },
@@ -153,4 +131,3 @@ export {
   handler as POST
 
 };
-*/

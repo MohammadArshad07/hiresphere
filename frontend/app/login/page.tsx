@@ -6,11 +6,13 @@ import Link from "next/link";
 
 import { motion } from "framer-motion";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-// import { signIn, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+
+import { useSearchParams } from "next/navigation";
 
 import { toast } from "sonner";
 import { apiUrl } from "@/lib/api";
@@ -20,7 +22,9 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  // const { data: session } = useSession();
+  const searchParams = useSearchParams();
+
+  const { data: session } = useSession();
 
   const [email, setEmail] =
     useState("");
@@ -34,27 +38,47 @@ export default function LoginPage() {
     useState(false);
 
 
-  // const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] =
+    useState(false);
 
   const [role, setRole] =
     useState("jobseeker");
 
-  /*
   useEffect(() => {
-    if (session?.user) {
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: session.user.name,
-          email: session.user.email,
-          role: (session.user as any).role || "jobseeker",
-        })
-      );
-      localStorage.setItem("isLoggedIn", "true");
-      router.push("/dashboard/seeker");
+    if (!session?.user) {
+      return;
     }
-  }, [session, router]);
-  */
+
+    const queryRole =
+      searchParams.get("role") === "recruiter"
+        ? "recruiter"
+        : "jobseeker";
+
+    const resolvedRole =
+      ((session.user as any).role || queryRole)
+        .toLowerCase()
+        .trim() === "recruiter"
+        ? "recruiter"
+        : "jobseeker";
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        name: session.user.name,
+        email: session.user.email,
+        image: session.user.image,
+        role: resolvedRole,
+      })
+    );
+
+    localStorage.setItem("isLoggedIn", "true");
+
+    router.replace(
+      resolvedRole === "recruiter"
+        ? "/dashboard/recruiter"
+        : "/dashboard/seeker"
+    );
+  }, [session, router, searchParams]);
 
   // LOGIN FUNCTION
 
@@ -157,13 +181,13 @@ localStorage.setItem(
 
       if (role === "recruiter") {
 
-        router.push(
+        router.replace(
           "/dashboard/recruiter"
         );
 
       } else {
 
-        router.push(
+        router.replace(
           "/dashboard/seeker"
         );
 
@@ -186,12 +210,12 @@ localStorage.setItem(
   };
 
 
-  /*
   const handleGoogleLogin = async () => {
     try {
       setGoogleLoading(true);
-      toast.success("Redirecting to Google...");
-      await signIn("google", { callbackUrl: "/dashboard/seeker" });
+      await signIn("google", {
+        callbackUrl: `/login?google=1&role=${role}`,
+      });
     } catch (error) {
       console.log(error);
       toast.error("Google login failed");
@@ -199,7 +223,6 @@ localStorage.setItem(
       setGoogleLoading(false);
     }
   };
-  */
 
   return (
 
@@ -411,10 +434,31 @@ localStorage.setItem(
 
         </form>
 
-        {/* Google OAuth disabled
-        <div className="flex items-center gap-4 my-8">...</div>
-        <button onClick={handleGoogleLogin}>Continue with Google</button>
-        */}
+        <div className="flex items-center gap-4 my-8 text-slate-300">
+
+          <span className="h-px flex-1 bg-white/15" />
+
+          <span className="text-sm uppercase tracking-[0.3em]">
+            or
+          </span>
+
+          <span className="h-px flex-1 bg-white/15" />
+
+        </div>
+
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          disabled={googleLoading || loading}
+          className="w-full flex items-center justify-center gap-3 bg-white text-slate-900 hover:bg-slate-100 transition py-4 rounded-2xl font-semibold text-lg disabled:opacity-50"
+        >
+
+          {googleLoading
+            ? "Redirecting to Google..."
+            : "Continue with Google"}
+
+        </button>
 
         {/* SIGNUP LINK */}
 
